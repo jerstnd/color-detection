@@ -32,73 +32,74 @@ while True:
     #mask video from lower to upper value
     track_color = ORANGE
     mask = cv2.inRange(hsvImage, track_color['lower'], track_color['upper'])
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-    if len(contours) != 0:
-        for contour in contours:
-            if cv2.contourArea(contour) > 1000:
-                x1, y1, x2, y2 = cv2.boundingRect(contour)
-                frame = cv2.rectangle(frame,(x1,y1),(x2+x1,y2+y1),(255, 165, 0), 3)
+    mask_ = Image.fromarray(mask)
 
-                '''
-                # if object in rectangle show 'IN' text
+    bbox = mask_.getbbox()
 
-                if x1>=xr1 and y1>=yr1 and x2<=xr2 and y2<=yr2:
-                    cv2.putText(frame, 'IN', (10, 380), cv2.FONT_HERSHEY_PLAIN,1, (0, 255, 0), 2)
-                    '''  
+    if bbox is not None:
+        x1, y1, x2, y2 = bbox
+        frame = cv2.rectangle(frame,(x1,y1),(x2,y2),(255, 165, 0), 3)
 
-                xs1, ys1, xe1, ye1 = 200, 0, 200, height
-                xs2, ys2, xe2, ye2 = 440, 0, 440, height
-                xs3, ys3, xe3, ye3 = 0, 180, width, 180
-                xs4, ys4, xe4, ye4 = 0, 300, width, 300
+        '''
+        # if object in rectangle show 'IN' text
 
-                cv2.putText(frame, 'Target Found', (10, 420), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
+        if x1>=xr1 and y1>=yr1 and x2<=xr2 and y2<=yr2:
+            cv2.putText(frame, 'IN', (10, 380), cv2.FONT_HERSHEY_PLAIN,1, (0, 255, 0), 2)
+        '''  
 
-                # Target Passed (ganti posisi jadi kanan atas)
-                if y1 > ys4:
-                    cv2.putText(frame, 'Target Passed', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
+        xs1, ys1, xe1, ye1 = 200, 0, 200, height
+        xs2, ys2, xe2, ye2 = 440, 0, 440, height
+        xs3, ys3, xe3, ye3 = 0, 180, width, 180
+        xs4, ys4, xe4, ye4 = 0, 300, width, 300
 
-                # Going Right
-                if x2 < xs1 and y2 < ys4:
-                    cv2.putText(frame, 'Going Right', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
+        cv2.putText(frame, 'Target Found', (10, 420), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
 
-                # Going Left
-                if x1 > xs2 and y2 < ys4:
-                    cv2.putText(frame, 'Going Left', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
+        # Target Passed (ganti posisi jadi kanan atas)
+        if y1 > ys4:
+            cv2.putText(frame, 'Target Passed', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
 
-                # On Sight
-                if x1 > xs1 and x2 < xs2 and y2 < ys3:
-                    cv2.putText(frame, 'On Sight', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)  
+        # Going Right
+        if x2 < xs1 and y2 < ys4:
+            cv2.putText(frame, 'Going Right', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
 
-                # Dropping Package
-                if x1 > xs1 and x2 < xs2 and y1 > ys3 and y2 < ys4 :
-                    cv2.putText(frame, 'DROPPING PACKAGE', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)                     
+        # Going Left
+        if x1 > xs2 and y2 < ys4:
+            cv2.putText(frame, 'Going Left', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
 
-                '''
-                #object position
-                cv2.putTextframe,f'x pos: {intx1)}',(10, 400), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
-                cv2.putText(frame, f'x pos: {int(y1)}', (10, 420), cv2.FONT_HERSHEY_PLAIN,1, (0, 255, 0), 2)
+        # On Sight
+        if x1 > xs1 and x2 < xs2 and y2 < ys3:
+            cv2.putText(frame, 'On Sight', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)  
 
-                # atas
-                if y1 > 300:
-                    cv2.putText(frame, 'bawah', (60, 440), cv2.FONT_HERSHEY_PLAIN,
-                    1, (0, 255, 0), 2)
+        # Dropping Package
+        if x1 > xs1 and x2 < xs2 and y1 > ys3 and y2 < ys4 :
+            cv2.putText(frame, 'DROPPING PACKAGE', (x1, y1-10), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)             
 
-                # bawah
-                else:
-                    cv2.putText(frame, 'atas', (60, 440), cv2.FONT_HERSHEY_PLAIN,
-                    1, (0, 255, 0), 2)
-
-                # kanan
-                if x1 > 300:
-                    cv2.putText(frame, 'kanan', (10, 440), cv2.FONT_HERSHEY_PLAIN,
-                    1, (0, 255, 0), 2)
-
-                # kiri 
-                else:
-                    cv2.putText(frame, 'kiri', (10, 440), cv2.FONT_HERSHEY_PLAIN,
-                    1, (0, 255, 0), 2)
-                '''
+        '''
+        #object position
+        cv2.putTextframe,f'x pos: {intx1)}',(10, 400), cv2.FONT_HERSHEY_PLAIN, 1, (0, 255, 0), 2)
+        cv2.putText(frame, f'x pos: {int(y1)}', (10, 420), cv2.FONT_HERSHEY_PLAIN,1, (0, 255, 0), 2)
+        
+        # atas
+        if y1 > 300:
+            cv2.putText(frame, 'bawah', (60, 440), cv2.FONT_HERSHEY_PLAIN,
+            1, (0, 255, 0), 2)
+                
+        # bawah
+        else:
+            cv2.putText(frame, 'atas', (60, 440), cv2.FONT_HERSHEY_PLAIN,
+            1, (0, 255, 0), 2)
+                    
+        # kanan
+        if x1 > 300:
+            cv2.putText(frame, 'kanan', (10, 440), cv2.FONT_HERSHEY_PLAIN,
+            1, (0, 255, 0), 2)
+                
+        # kiri 
+        else:
+            cv2.putText(frame, 'kiri', (10, 440), cv2.FONT_HERSHEY_PLAIN,
+            1, (0, 255, 0), 2)
+        '''
 
     cv2.imshow('frame', frame)
     cv2.imshow('frame', line1)
