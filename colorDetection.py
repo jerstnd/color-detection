@@ -25,13 +25,13 @@ while True:
     #xr1, yr1, xr2, yr2 = 160, 120, 480, 360
     #img = cv2.rectangle(frame, (xr1, yr1), (xr2, yr2), (255, 0,0), 2)
 
-    '''
+    
     #lines
-    line1 = cv2.line(frame, (200, 0), (200, height), (255, 0, 0), 2)
-    line2 = cv2.line(line1, (440, 0), (440, height), (255, 0, 0), 2)
-    line3 = cv2.line(line1, (0, 180), (width, 180), (255, 0, 0), 2)
-    line4 = cv2.line(line1, (0, 300), (width, 300), (255, 0, 0), 2)
-    '''
+    line1 = cv2.line(frame, (200, 0), (200, height), (255, 0, 0), 1)
+    line2 = cv2.line(frame, (440, 0), (440, height), (255, 0, 0), 1)
+    line3 = cv2.line(frame, (0, 180), (width, 180), (255, 0, 0), 1)
+    line4 = cv2.line(frame, (0, 300), (width, 300), (255, 0, 0), 1)
+    
 
     #convert BGR to HSV
     hsvImage = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -44,7 +44,8 @@ while True:
     if len(contours) != 0:
         for contour in contours:
             if cv2.contourArea(contour) > 1000:
-                x1, y1, x2, y2 = cv2.boundingRect(contour)
+                c = max(contours, key=cv2.contourArea)
+                x1, y1, x2, y2 = cv2.boundingRect(c)
                 w = x1 + x2
                 h = y1 + y2
                 frame = cv2.rectangle(frame,(x1,y1),(w,h),(255, 165, 0), 3)
@@ -110,10 +111,6 @@ while True:
                 '''
 
     cv2.imshow('frame', frame)
-    #cv2.imshow('frame', line1)
-    #cv2.imshow('frame', line2)
-    #cv2.imshow('frame', line3)
-    #cv2.imshow('frame', line4)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
